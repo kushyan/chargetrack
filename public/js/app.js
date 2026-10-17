@@ -1,20 +1,17 @@
 "use strict";
 
 /**
- * 线上实时数据地址（可选）。
- * 部署 worker/cloudflare-worker.js 后，把它的地址填进来，例如：
- *   const REMOTE_API = "https://chargetrack-api.你的子域.workers.dev";
- * 填了就优先走它（实时、10 秒刷新）；留空则走 /api/status（本地 server.mjs），
- * 再不行才退回 data.json（GitHub Actions 定时快照）。
+ * 线上实时数据地址（Cloudflare Worker）。
+ * 留空则走 /api/status（本地 server.mjs 或其它自托管），再不行退回 data.json（Actions 快照）。
  */
-const REMOTE_API = "https://chargetrack-api.2952832309.workers.dev/";
+const REMOTE_API = "https://chargetrack-api.2952832309.workers.dev";
 
 const POLL_MS = 10000;
+const CACHE_KEY = "chargetrack.snapshot";
+const CACHE_MAX_AGE_MS = 30 * 60 * 1000;
 
 const els = {
 	stations: document.getElementById("stations"),
-	title: document.getElementById("title"),
-	subtitle: document.getElementById("subtitle"),
 	sourcePill: document.getElementById("source-pill"),
 	sourceText: document.getElementById("source-text"),
 	updatedAt: document.getElementById("updated-at"),
@@ -40,7 +37,7 @@ const els = {
 })();
 
 /* ---------------- 状态映射 ---------------- */
-// 上游 status: 1 = 空闲可用, 0 = 使用中(不可用), -1 = 离线/故障
+// 上游 status: 1 = 空闲, 0 = 使用中, -1 = 故障；online=false 表示整台设备离线
 function portClass(status, online) {
 	if (online === false) return "is-fault";
 	if (status === 1) return "is-free";
@@ -56,11 +53,11 @@ function portLabel(status, online) {
 }
 
 /* ---------------- 数据请求 ---------------- */
-// 优先级：REMOTE_API（Cloudflare Worker，实时）→ /api/status（本地 server.mjs）→ data.json（Actions 快照）
+// 优先级：Worker（实时）→ /api/status（本地服务）→ data.json（定时快照）
 async function fetchStatus(force = false) {
 	if (REMOTE_API) {
 		try {
-			const res = await fetch(`${REMOTE_API}${force ? "?force=1" : ""}`, { cache: "no-store" });
+			const res = await fetch(`${REMOTE_API}${force ? "?force=1&t=" + Date.now() : ""}`, { cache: "no-store" });
 			if (res.ok) {
 				const data = await res.json();
 				if (Array.isArray(data.stations) && data.stations.length) {
@@ -91,6 +88,29 @@ async function fetchStatus(force = false) {
 	const data = await res.json();
 	data.mode = "static";
 	return data;
+}
+
+/* ---------------- 本地缓存：进站秒开 ---------------- */
+function loadCachedSnapshot() {
+	try {
+		const raw = localStorage.getItem(CACHE_KEY);
+		if (!raw) return null;
+		const snap = JSON.parse(raw);
+		if (!snap || !Array.isArray(snap.stations) || !snap.stations.length) return null;
+		if (Date.now() - Date.parse(snap.updatedAt) > CACHE_MAX_AGE_MS) return null;
+		snap.mode = "cached";
+		return snap;
+	} catch (_) {
+		return null;
+	}
+}
+
+function saveSnapshot(snapshot) {
+	try {
+		localStorage.setItem(CACHE_KEY, JSON.stringify(snapshot));
+	} catch (_) {
+		/* 隐私模式写不进去，忽略 */
+	}
 }
 
 /* ---------------- 渲染 ---------------- */
@@ -182,7 +202,6 @@ function render(snapshot) {
 	const stations = snapshot.stations || [];
 	const container = els.stations;
 
-	// 站点数量/顺序变化时重建骨架
 	const sameShape =
 		container.children.length === stations.length &&
 		stations.every((s, i) => container.children[i].dataset.id === s.id);
@@ -204,22 +223,25 @@ function render(snapshot) {
 	// 数据来源 / 更新时间
 	const source = snapshot.source || "live";
 	const staticMode = snapshot.mode === "static";
+	const cachedMode = snapshot.mode === "cached";
 	const ts = snapshot.updatedAt ? new Date(snapshot.updatedAt) : new Date();
 	const ageMin = Math.max(0, Math.round((Date.now() - ts.getTime()) / 60000));
 	const stale = staticMode && ageMin >= 12;
 
-	els.sourcePill.classList.toggle("live", source === "live" && !stale);
+	els.sourcePill.classList.toggle("live", source === "live" && !stale && !cachedMode);
 	els.sourcePill.classList.toggle("error", source === "offline");
 	els.sourcePill.classList.toggle("warn", stale);
-	els.sourceText.textContent = stale
-		? `快照 ${ageMin} 分钟前`
-		: staticMode
-			? "定时快照"
-			: source === "live"
-				? "实时数据"
-				: source === "partial"
-					? "部分更新"
-					: "上游离线";
+	els.sourceText.textContent = cachedMode
+		? "载入中…"
+		: stale
+			? `快照 ${ageMin} 分钟前`
+			: staticMode
+				? "定时快照"
+				: source === "live"
+					? "实时数据"
+					: source === "partial"
+						? "部分更新"
+						: "上游离线";
 
 	els.updatedAt.textContent = ts.toLocaleTimeString("zh-CN", { hour12: false });
 	els.updatedAt.title = `最后更新：${ts.toLocaleString("zh-CN", { hour12: false })}（${ageMin} 分钟前）`;
@@ -237,6 +259,7 @@ async function refresh(force = false) {
 		const snapshot = await fetchStatus(force);
 		staticMode = snapshot.mode === "static";
 		render(snapshot);
+		if (snapshot.mode !== "cached") saveSnapshot(snapshot);
 	} catch (e) {
 		console.warn("[chargetrack] 刷新失败", e);
 		els.sourcePill.classList.remove("live");
@@ -255,5 +278,9 @@ async function loop() {
 }
 
 els.refreshBtn.addEventListener("click", () => refresh(true));
+
+// 先用上次的数据秒开，再拉最新覆盖
+const cachedSnapshot = loadCachedSnapshot();
+if (cachedSnapshot) render(cachedSnapshot);
 
 loop();
