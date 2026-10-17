@@ -7,7 +7,7 @@
  * 填了就优先走它（实时、10 秒刷新）；留空则走 /api/status（本地 server.mjs），
  * 再不行才退回 data.json（GitHub Actions 定时快照）。
  */
-const REMOTE_API = "";
+const REMOTE_API = "https://chargetrack-api.2952832309.workers.dev/";
 
 const POLL_MS = 10000;
 
