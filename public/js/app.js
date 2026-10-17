@@ -1,5 +1,14 @@
 "use strict";
 
+/**
+ * 线上实时数据地址（可选）。
+ * 部署 worker/cloudflare-worker.js 后，把它的地址填进来，例如：
+ *   const REMOTE_API = "https://chargetrack-api.你的子域.workers.dev";
+ * 填了就优先走它（实时、10 秒刷新）；留空则走 /api/status（本地 server.mjs），
+ * 再不行才退回 data.json（GitHub Actions 定时快照）。
+ */
+const REMOTE_API = "";
+
 const POLL_MS = 10000;
 
 const els = {
@@ -47,15 +56,31 @@ function portLabel(status, online) {
 }
 
 /* ---------------- 数据请求 ---------------- */
-// 本地跑 server.mjs 时走 /api/status（实时代理上游）；
-// 部署到 GitHub Pages 等纯静态环境时，/api 不存在，自动回退到 GitHub Actions 定时生成的 data.json。
+// 优先级：REMOTE_API（Cloudflare Worker，实时）→ /api/status（本地 server.mjs）→ data.json（Actions 快照）
 async function fetchStatus(force = false) {
+	if (REMOTE_API) {
+		try {
+			const res = await fetch(`${REMOTE_API}${force ? "?force=1" : ""}`, { cache: "no-store" });
+			if (res.ok) {
+				const data = await res.json();
+				if (Array.isArray(data.stations) && data.stations.length) {
+					data.mode = "live";
+					return data;
+				}
+			}
+		} catch (_) {
+			/* 落到下一级 */
+		}
+	}
+
 	try {
 		const res = await fetch(force ? "/api/status?force=1" : "/api/status", { cache: "no-store" });
 		if (res.ok && (res.headers.get("content-type") || "").includes("json")) {
 			const data = await res.json();
-			data.mode = "live";
-			return data;
+			if (Array.isArray(data.stations) && data.stations.length) {
+				data.mode = "live";
+				return data;
+			}
 		}
 	} catch (_) {
 		/* 静态托管下这里会失败，继续往下走 */
@@ -179,19 +204,25 @@ function render(snapshot) {
 	// 数据来源 / 更新时间
 	const source = snapshot.source || "live";
 	const staticMode = snapshot.mode === "static";
-	els.sourcePill.classList.toggle("live", source === "live");
-	els.sourcePill.classList.toggle("error", source === "offline");
-	els.sourceText.textContent = staticMode
-		? "定时快照"
-		: source === "live"
-			? "实时数据"
-			: source === "partial"
-				? "部分更新"
-				: "上游离线";
-
 	const ts = snapshot.updatedAt ? new Date(snapshot.updatedAt) : new Date();
+	const ageMin = Math.max(0, Math.round((Date.now() - ts.getTime()) / 60000));
+	const stale = staticMode && ageMin >= 12;
+
+	els.sourcePill.classList.toggle("live", source === "live" && !stale);
+	els.sourcePill.classList.toggle("error", source === "offline");
+	els.sourcePill.classList.toggle("warn", stale);
+	els.sourceText.textContent = stale
+		? `快照 ${ageMin} 分钟前`
+		: staticMode
+			? "定时快照"
+			: source === "live"
+				? "实时数据"
+				: source === "partial"
+					? "部分更新"
+					: "上游离线";
+
 	els.updatedAt.textContent = ts.toLocaleTimeString("zh-CN", { hour12: false });
-	els.updatedAt.title = `最后更新：${ts.toLocaleString("zh-CN", { hour12: false })}`;
+	els.updatedAt.title = `最后更新：${ts.toLocaleString("zh-CN", { hour12: false })}（${ageMin} 分钟前）`;
 }
 
 /* ---------------- 轮询 ---------------- */
