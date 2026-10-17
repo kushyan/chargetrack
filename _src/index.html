@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <title>充电站监控</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* 主题相关颜色过渡 */
+        body,
+        .header,
+        .header-main,
+        .footer,
+        .station-header {
+            transition:
+                background-color 0.3s ease,
+                border-color 0.3s ease,
+                color 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-main">
+            <div class="header-title"><span id="name"></span><span class="suffix">充电站监控系统</span></div>
+            <button id="theme-toggle" title="切换主题">🌙</button>
+        </div>
+        <div id="banner">
+            <span class="banner-icon">📢</span>
+            <div id="banner-text"></div>
+        </div>
+    </header>
+
+    <div id="main"></div>
+
+    <footer class="footer">
+        <div class="info">
+            <p title="原应用化学2024级1班">开发:何晨洋 | 邮箱: <a href="mailto:347244312@qq.com">347244312@qq.com</a></p>
+        </div>
+    </footer>
+
+    <script src="js/init.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/banner.js"></script>
+    <script src="js/data.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4bdc1033b2b4f08',t:'MTc5MjIyMzg2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+</html>

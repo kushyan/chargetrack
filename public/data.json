@@ -1,0 +1,523 @@
+{
+	"updatedAt": "2026-10-17T08:30:34.849Z",
+	"source": "live",
+	"stations": [
+		{
+			"name": "1号",
+			"id": "2022002744",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "2号",
+			"id": "2022002731",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 1
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "3号",
+			"id": "2022002746",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": -1
+				}
+			]
+		},
+		{
+			"name": "4号",
+			"id": "2022002804",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "5号",
+			"id": "2022002756",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "6号",
+			"id": "2022002733",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "7号",
+			"id": "2022002723",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "8号",
+			"id": "2022002738",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": -1
+				}
+			]
+		},
+		{
+			"name": "9号",
+			"id": "2022002741",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "10号",
+			"id": "2022002747",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": -1
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		},
+		{
+			"name": "11号",
+			"id": "2022002735",
+			"online": true,
+			"data": [
+				{
+					"channel": "00",
+					"status": 0
+				},
+				{
+					"channel": "01",
+					"status": 0
+				},
+				{
+					"channel": "02",
+					"status": 0
+				},
+				{
+					"channel": "03",
+					"status": 0
+				},
+				{
+					"channel": "04",
+					"status": 0
+				},
+				{
+					"channel": "05",
+					"status": 0
+				},
+				{
+					"channel": "06",
+					"status": 0
+				},
+				{
+					"channel": "07",
+					"status": 0
+				},
+				{
+					"channel": "08",
+					"status": 0
+				},
+				{
+					"channel": "09",
+					"status": 0
+				}
+			]
+		}
+	]
+}
