@@ -240,6 +240,51 @@ body {
 	display: none;
 }
 
+/* ===================== 首次加载提示 ===================== */
+.notice {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	margin-bottom: 14px;
+	padding: 10px 14px;
+	border: 1px solid var(--fault-border);
+	border-radius: 12px;
+	background: var(--fault-bg);
+	color: var(--fault);
+	font-size: 13px;
+	line-height: 1.5;
+	max-height: 80px;
+	overflow: hidden;
+	transition: opacity 0.45s ease, transform 0.45s ease, margin 0.45s ease,
+		padding 0.45s ease, max-height 0.45s ease;
+}
+
+.notice[hidden] {
+	display: none;
+}
+
+.notice-icon {
+	flex: 0 0 auto;
+	font-size: 14px;
+	animation: noticePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes noticePulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.45; }
+}
+
+.notice.is-hiding {
+	opacity: 0;
+	transform: translateY(-6px);
+	max-height: 0;
+	margin-bottom: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	border-top-width: 0;
+	border-bottom-width: 0;
+}
+
 /* ===================== 统计条 ===================== */
 .stats {
 	display: flex;

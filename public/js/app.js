@@ -17,6 +17,7 @@ const els = {
 	updatedAt: document.getElementById("updated-at"),
 	refreshBtn: document.getElementById("refresh-btn"),
 	themeBtn: document.getElementById("theme-btn"),
+	notice: document.getElementById("notice"),
 	statFree: document.getElementById("stat-free"),
 	statBusy: document.getElementById("stat-busy"),
 	statOffline: document.getElementById("stat-offline"),
@@ -251,6 +252,17 @@ function render(snapshot) {
 let inflight = false;
 let staticMode = false;
 
+/** 数据到手后收掉"首次加载耐心等待"提示 */
+function hideNotice() {
+	const n = els.notice;
+	if (!n || n.hidden || n.classList.contains("is-hiding")) return;
+	n.classList.add("is-hiding");
+	setTimeout(() => {
+		n.hidden = true;
+		n.classList.remove("is-hiding");
+	}, 500);
+}
+
 async function refresh(force = false) {
 	if (inflight) return;
 	inflight = true;
@@ -259,7 +271,10 @@ async function refresh(force = false) {
 		const snapshot = await fetchStatus(force);
 		staticMode = snapshot.mode === "static";
 		render(snapshot);
-		if (snapshot.mode !== "cached") saveSnapshot(snapshot);
+		if (snapshot.mode !== "cached") {
+			saveSnapshot(snapshot);
+			hideNotice();
+		}
 	} catch (e) {
 		console.warn("[chargetrack] 刷新失败", e);
 		els.sourcePill.classList.remove("live");
@@ -279,8 +294,12 @@ async function loop() {
 
 els.refreshBtn.addEventListener("click", () => refresh(true));
 
-// 先用上次的数据秒开，再拉最新覆盖
+// 先用上次的数据秒开，再拉最新覆盖；没有缓存才显示"首次加载"提示
 const cachedSnapshot = loadCachedSnapshot();
-if (cachedSnapshot) render(cachedSnapshot);
+if (cachedSnapshot) {
+	render(cachedSnapshot);
+} else if (els.notice) {
+	els.notice.hidden = false;
+}
 
 loop();
